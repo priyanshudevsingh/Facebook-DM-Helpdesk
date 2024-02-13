@@ -23,7 +23,7 @@ const Register = () => {
   const PostData = async (e) => {
     e.preventDefault();
 
-    const { name, email, password, cpassword } = user;
+    const { name, email, password } = user;
 
     const res = await fetch(`${backendUrl}/register`, {
       method: "POST",
@@ -35,7 +35,6 @@ const Register = () => {
         name,
         email,
         password,
-        cpassword,
       }),
     });
 
@@ -50,12 +49,6 @@ const Register = () => {
     } else if (res.status === 409) {
       window.alert("Email already Exists");
       console.log("Email already Exists");
-    } else if (res.status === 406) {
-      window.alert("This UserID is not available");
-      console.log("This UserID is not available");
-    } else if (res.status === 400) {
-      window.alert("Passwords are not matching");
-      console.log("Passwords are not matching");
     } else {
       window.alert("Registration Successful");
       console.log("Registration Successful");
