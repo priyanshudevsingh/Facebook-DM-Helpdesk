@@ -1,0 +1,87 @@
+.loginpage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #1e4e91;
+}
+
+.form-box-login {
+  position: relative;
+  width: 500px;
+  height: 450px;
+  background: #fff;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-text {
+  text-align: center;
+  font-weight: 500;
+  margin: 0;
+}
+
+.inputbox {
+  margin-bottom: 20px;
+  width: 400px;
+}
+
+.inputbox .details {
+  font-weight: 500;
+  display: block;
+}
+
+.inputbox input {
+  width: 100%;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding-left: 10px;
+  font-size: 16px;
+}
+
+.tickbox-container {
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+input[type="checkbox"] {
+  margin-right: 13px;
+  transform: scale(1.5);
+}
+
+label {
+  font-size: 16px;
+  color: #333;
+}
+
+.click input {
+  width: 100%;
+  height: 40px;
+  background: #1e4e91;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  color: #f5f2f2;
+}
+
+.already {
+  padding: 8px;
+  text-align: center;
+}
+
+.login-link {
+  text-decoration: none;
+}
+
+.bottom-text {
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+}
