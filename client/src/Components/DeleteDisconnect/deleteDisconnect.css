@@ -1,0 +1,54 @@
+.delete-disconnectpage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #1e4e91;
+}
+
+.delete-disconnect-box {
+  position: relative;
+  width: 500px;
+  height: 280px;
+  background: #fff;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-disconnect-text {
+  text-align: center;
+  font-weight: 100;
+  margin-bottom: 15px;
+}
+
+.integration-text {
+  text-align: center;
+  font-weight: 100;
+  margin-bottom: 30px;
+}
+
+.reply input {
+  width: 100%;
+  height: 40px;
+  background: #1e4e91;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  color: #f5f2f2;
+}
+
+.delete input {
+  width: 100%;
+  height: 40px;
+  background: #ff404c;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  color: #f5f2f2;
+  margin-bottom: 15px;
+}

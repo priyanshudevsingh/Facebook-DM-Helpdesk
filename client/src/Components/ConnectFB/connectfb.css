@@ -1,0 +1,36 @@
+.connectfbpage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #1e4e91;
+}
+
+.connectfb-box {
+  position: relative;
+  width: 500px;
+  height: 200px;
+  background: #fff;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.connectfb-text {
+  text-align: center;
+  font-weight: 100;
+  margin-bottom: 50px;
+}
+
+.click input {
+  width: 100%;
+  height: 40px;
+  background: #1e4e91;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  color: #f5f2f2;
+}

@@ -28,11 +28,6 @@ router.post("/register", async (req, res) => {
       await user.save();
       res.status(200).json({ message: "User Registered Successfully" });
 
-      const newTask = new Task({
-        email,
-        tasks: [],
-      });
-      await newTask.save();
       console.log("yayyy");
     }
   } catch (err) {
