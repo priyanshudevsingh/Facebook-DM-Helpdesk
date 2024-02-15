@@ -14,7 +14,7 @@ function App() {
           <Route path="/" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/connectfb" element={<ConnectFB />} />
-          <Route path="/integration" element={<DeleteDisconnect />} />
+          <Route path="/page-integration/:pid" element={<DeleteDisconnect />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -41,10 +41,11 @@ const Login = () => {
         localStorage.setItem("jwtToken", data.token);
         window.alert("Login Successful");
         console.log("Login Successful");
-        navigate("/");
+        navigate("/connectfb");
       }
     } catch (err) {
       console.log(err);
+      navigate("/");
     }
   };
 

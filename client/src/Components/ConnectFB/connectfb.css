@@ -34,3 +34,40 @@
   font-size: 1em;
   color: #f5f2f2;
 }
+
+.page-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(
+    2px
+  ); /* for safari browser (i mean who use it nowadays but google says so) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-popup {
+  background-color: #4794ff;
+  padding: 2px 20px 20px 20px;
+  border-radius: 25px;
+  max-height: 85vh;
+  max-width: 70vw;
+  overflow-y: auto;
+  overflow-x: auto;
+  box-shadow: 0 5px 200px rgba(5, 255, 197, 0.555);
+}
+
+.text1 {
+  color: #000000;
+  text-align: center;
+}
+
+.pagename{
+  text-decoration: none;
+  color: #000000;
+  font-weight: bold;
+}

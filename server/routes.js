@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const authenticate = require("./middleware/authenticate");
 
 require("./db/connect");
 const User = require("./model/userSchema");
@@ -62,6 +63,36 @@ router.post("/login", async (req, res) => {
     } else {
       res.status(400).json({ error: "Invalid Credentials" });
     }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// userdata getter route
+router.get("/userdata", authenticate, async (req, res) => {
+  try {
+    res.send(req.userdata);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// intergration route
+router.get("/integration", authenticate, async (req, res) => {
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/me/accounts?access_token=${process.env.ACCESS_TOKEN}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    const pages = await response.json();
+    res.send(pages.data);
   } catch (err) {
     console.log(err);
   }

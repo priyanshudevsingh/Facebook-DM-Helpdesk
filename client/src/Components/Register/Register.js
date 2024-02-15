@@ -21,38 +21,43 @@ const Register = () => {
 
   // connecting register page to backend
   const PostData = async (e) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const { name, email, password } = user;
+      const { name, email, password } = user;
 
-    const res = await fetch(`${backendUrl}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-      }),
-    });
+      const res = await fetch(`${backendUrl}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!data) {
-      window.alert("You're missing some fields");
-      console.log("You're missing some fields");
-    } else if (res.status === 422) {
-      window.alert("You're missing some fields");
-      console.log("You're missing some fields");
-    } else if (res.status === 409) {
-      window.alert("Email already Exists");
-      console.log("Email already Exists");
-    } else {
-      window.alert("Registration Successful");
-      console.log("Registration Successful");
-      navigate("/login");
+      if (!data) {
+        window.alert("You're missing some fields");
+        console.log("You're missing some fields");
+      } else if (res.status === 422) {
+        window.alert("You're missing some fields");
+        console.log("You're missing some fields");
+      } else if (res.status === 409) {
+        window.alert("Email already Exists");
+        console.log("Email already Exists");
+      } else {
+        window.alert("Registration Successful");
+        console.log("Registration Successful");
+        navigate("/login");
+      }
+    } catch (err) {
+      console.log(err);
+      navigate("/");
     }
   };
 
