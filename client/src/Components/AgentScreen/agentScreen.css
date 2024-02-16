@@ -1,0 +1,291 @@
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.first-column {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 4vw;
+  background-color: #1e4e91;
+  display: flex;
+  flex-direction: column;
+}
+
+.options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.options li {
+  border-bottom: 1px solid #ddd;
+}
+
+.options li a {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #333;
+}
+
+.options li a:hover {
+  background-color: #eee;
+}
+
+.options li a:hover svg {
+  fill: #0866ff;
+}
+
+.active-nav {
+  background-color: #eee;
+}
+
+.active-nav svg {
+  fill: #0866ff;
+}
+
+.tab-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.agentDetails {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.profilePic {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profilePic img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+}
+
+.second-column {
+  margin-left: 4vw;
+  width: 20vw;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #fff;
+  color: #000;
+}
+
+.top-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-img,
+.refresh-img {
+  width: 20px;
+  height: 20px;
+  vertical-align: text-bottom;
+}
+
+.conversation {
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.active {
+  background-color: #cfd1d5;
+}
+
+.partition {
+  border-bottom: 1px solid #cfd1d5;
+  height: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.third-column {
+  width: 56vw;
+  height: 100vh;
+  border-left: 1px solid #cfd1d5;
+  border-right: 1px solid #cfd1d5;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+}
+
+.chat-top {
+  text-align: left;
+  font-size: 20px;
+  flex: 0 0 auto;
+}
+
+.all-chats {
+  flex-grow: 1;
+  overflow-y: scroll;
+  margin-bottom: 0px;
+  background-color: rgb(240, 240, 240);
+}
+
+.msg-typing-area {
+  padding-top: 50px;
+  flex: 0 0 auto;
+  background-color: rgb(240, 240, 240);
+  width: 100%;
+}
+
+#msg-typing-area {
+  position: absolute;
+  bottom: 10px;
+  width: 90%;
+  height: 30px;
+  margin-left: 5%;
+  margin-top: 20px;
+}
+
+.forth-column {
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-profile-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 36vh;
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.customer-picture {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.customer-name {
+  margin-top: 10px;
+  font-size: 21px;
+}
+
+.customer-status-tab {
+  display: flex;
+  flex-direction: row;
+  padding: auto;
+}
+
+.customer-status-ondot {
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%;
+  margin: 3px;
+  margin-top: 5px;
+}
+
+.customer-status-offdot {
+  width: 10px;
+  height: 10px;
+  background-color: gray;
+  border-radius: 50%;
+  margin: 3px;
+  margin-top: 5px;
+}
+
+.customer-status {
+  font-size: 14px;
+  color: #666;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.call-button,
+.profile-button {
+  margin: 10px 5px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+}
+
+.call-icon {
+  transform: rotate(-45deg);
+}
+
+.call-icon,
+.profile-icon {
+  margin-right: 3px;
+}
+
+.customer-details {
+  background-color: #c7d2dd;
+  flex-grow: 1;
+}
+
+.details-section {
+  background-color: white;
+  padding: 5px;
+  border-radius: 8px;
+  margin: 15px;
+}
+
+.all-details {
+  display: flex;
+  flex-direction: column;
+  margin: auto 10px;
+}
+
+.top-details-text {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.customer-email,
+.customer-fname,
+.customer-lname {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.email,
+.fname,
+.lname {
+  color: #666;
+}
+
+.view-more-details {
+  text-decoration: none;
+  font-size: 15px;
+  color: #3671d1;
+  font-weight: 600;
+  margin: 10px 0;
+}

@@ -98,4 +98,25 @@ router.get("/integration", authenticate, async (req, res) => {
   }
 });
 
+// getting customers messages route
+router.get("/fetchMessages", async (req, res) => {
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/v19.0/${process.env.PAGE_ID}/conversations?fields=participants,messages%7Bid,message,created_time,from%7D&access_token=${process.env.MESSAGES_ACCESS_TOKEN}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    const pages = await response.json();
+    res.send(pages.data);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 module.exports = router;
