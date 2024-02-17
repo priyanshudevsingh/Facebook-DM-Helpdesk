@@ -31,7 +31,6 @@ const DeleteDisconnect = () => {
     }
   };
 
-  const replyMessages = async (e) => {};
   return (
     <>
       <section className="delete-disconnectpage">
@@ -57,7 +56,7 @@ const DeleteDisconnect = () => {
               <input
                 type="submit"
                 value="Reply To Messages"
-                onClick={replyMessages}
+                onClick={() => navigate("/agent")}
               />
             </div>
           </div>

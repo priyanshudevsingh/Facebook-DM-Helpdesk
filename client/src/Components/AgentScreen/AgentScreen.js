@@ -1,25 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomersList from "./CustomersList";
 import Chats from "./Chats";
 import { backendUrl } from "../../backendUrl";
-import "./agentScreen.css";
 import { useNavigate } from "react-router-dom";
 import inbox from "../../Assets/inbox.png";
 import logo from "../../Assets/logo.png";
 import people from "../../Assets/people.png";
 import stocks from "../../Assets/stocks.png";
+import minion from "../../Assets/SpaceMinion.png";
+import phone from "../../Assets/phone.png";
+import profile from "../../Assets/profile.png";
+import menu from "../../Assets/menu.jpeg";
+import refresh from "../../Assets/refresh.png";
+import "./agentScreen.css";
 
 const AgentScreen = () => {
   const navigate = useNavigate();
-  const [chatdata, setChatdata] = useState([]);
-  const [custName, setCustName] = useState("");
-  const [custEmail, setCustEmail] = useState("");
-  const [custId, setCustId] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [time, setTime] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [Email, setEmail] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-  const [status, setStatus] = useState("online");
+  const [conversations, setConversations] = useState([]);
+  const [pageName, setPageName] = useState("");
+  const [activeChatData, setActiveChatData] = useState("");
+
+  let custName = "";
+  let custEmail = "";
 
   // fetching all the messages log and info from backend
   const fetchMessages = async () => {
@@ -34,14 +40,28 @@ const AgentScreen = () => {
       });
 
       const data = await res.json();
-      setChatdata(data);
 
       // getting the info from the data that we just got
-      setCustName();
-      setCustEmail();
-      setCustId();
-      setTime();
-      setMessages();
+      const conversationsData = [];
+      data.forEach((chat) => {
+        const participants = chat.participants.data;
+        setPageName(participants[1].name);
+        custEmail = participants[0].email;
+        custName = participants[0].name;
+
+        const conversationMessages = [];
+        chat.messages.data.forEach((message) => {
+          conversationMessages.push(message);
+        });
+
+        conversationsData.push({
+          name: custName,
+          email: custEmail,
+          messages: conversationMessages,
+        });
+      });
+
+      setConversations(conversationsData);
 
       if (data.length === 0) {
         window.alert("No Pages Found.");
@@ -52,20 +72,77 @@ const AgentScreen = () => {
     }
   };
 
+  const fetchChat = (email) => {
+    try {
+      const chat = conversations.find(
+        (conversation) => conversation.email === email
+      );
+      setActiveChatData(chat);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleViewChat = (email, name) => {
+    const [firstName, ...lastNameArray] = name.split(" ");
+    const lastName = lastNameArray.join(" ");
+    fetchChat(email);
+    setEmail(email);
+    setFullName(name);
+    setFname(firstName);
+    setLname(lastName);
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
   return (
     <div className="container">
-      <div className="first-column">
-        <ul className="options">
-          <li><img src={logo} width="50px" height="50px"/></li>
-          <li><img src={inbox} width="50px" height="50px"/></li>
-          <li><img src={people} wwidth="50px" height="50px"/></li>
-          <li><img src={stocks} width="50px" height="50px"/></li>
+      <div class="first-column">
+        <ul class="options">
+          <li>
+            <img
+              src={logo}
+              width="50px"
+              height="50px"
+              className="sidebar-logos"
+            />
+          </li>
+          <li>
+            <img
+              src={inbox}
+              width="50px"
+              height="50px"
+              className="sidebar-logos"
+            />
+          </li>
+          <li>
+            <img
+              src={people}
+              width="50px"
+              height="50px"
+              className="sidebar-logos"
+            />
+          </li>
+          <li>
+            <img
+              src={stocks}
+              width="50px"
+              height="50px"
+              className="sidebar-logos"
+            />
+          </li>
         </ul>
 
-        <div className="agentDetails">
-          <div className="profilePic">
-            <img src alt="Profile Picture"></img>
-            <img className="dot"></img>
+        <div class="agentDetails">
+          <div class="profilePic">
+            <img
+              src={minion}
+              width="70px"
+              height="70px"
+              alt="Profile Picture"
+            />
           </div>
         </div>
       </div>
@@ -73,65 +150,98 @@ const AgentScreen = () => {
       <div className="second-column">
         <div className="top-bar">
           <div className="top-left">
-            <img src alt="Menu Image" className="menu-img" />
+            <img
+              src={menu}
+              width="70px"
+              height="70px"
+              alt="Menu Image"
+              className="menu-img"
+            />
             <span className="conversation">Conversation</span>
           </div>
-          <img src alt="Refresh Image" className="refresh-img" />
+          <img
+            src={refresh}
+            width="70px"
+            height="70px"
+            alt="Refresh Image"
+            className="refresh-img"
+            onClick={() => window.location.reload()}
+          />
         </div>
 
         <div className="partition"></div>
+        {conversations.map((i, index) => (
+          <div
+            key={index}
+            className={index % 2 === 0 ? "grey-background" : "white-background"}
+            onClick={() => handleViewChat(i.email, i.name)}
+          >
+            <CustomersList name={i.name} messages={i.messages} />
+          </div>
+        ))}
       </div>
 
       <div className="third-column">
         <div className="top-bar">
-          <span className="chat-top">Chat</span>
+          <span className="chat-top">{fullName ? fullName : "Chat"}</span>
         </div>
         <div className="partition"></div>
-        <div className="all-chats"></div>
+        <div className="all-chats">
+          {activeChatData &&
+            activeChatData.messages &&
+            activeChatData.messages
+              .slice()
+              .reverse()
+              .map((i) => <Chats msg={i} pageName={pageName} />)}
+        </div>
 
         <div className="msg-typing-area">
           <input
             type="text"
             name=""
-            id="msg-typing-area"
-            placeholder="Message"
+            className="msg-typing-area-inside"
+            placeholder={`Message ${fullName}`}
           />
         </div>
       </div>
 
       <div className="forth-column">
         <div className="customer-profile-tab">
-          <img src alt="Profile Picture" className="customer-picture" />
+          <img
+            src={minion}
+            width="70px"
+            height="70px"
+            alt="Profile Picture"
+            className="customer-picture"
+          />
 
-          <div className="customer-name">{custName}</div>
+          <div className="customer-name">{fullName}</div>
 
-          {status === "Online" ? (
-            <div className="customer-status-tab">
-              <div className="customer-status-ondot"></div>
-              <div className="customer-status">
-                {/* {status === "online" ? (
-                  <span>Online</span>
-                ) : (
-                  <span>Offline</span>
-                )} */}
-                Online
-              </div>
-            </div>
-          ) : (
-            <div className="customer-status-tab">
-              <div className="customer-status-offdot"></div>
-              <div className="customer-status">Offline</div>
-            </div>
-          )}
+          <div className="customer-status-tab">
+            <div className="customer-status-offdot"></div>
+            <div className="customer-status">Offline</div>
+          </div>
 
           <div className="buttons">
             <button className="call-button">
-              <img src alt="Call Image" />
+              <img
+                src={phone}
+                width="25px"
+                height="25px"
+                alt="Call Image"
+                className="call-profile-button"
+              />
               Call
             </button>
 
             <button className="profile-button">
-              <img src alt="Profile Image" />
+              <img
+                src={profile}
+                width="25px"
+                height="25px"
+                alt="Profile Image"
+                className="call-profile-button"
+              />
               Profile
             </button>
           </div>
@@ -146,7 +256,7 @@ const AgentScreen = () => {
 
               <div className="customer-email">
                 <div className="email">Email</div>
-                <div className="fetched-email">{custEmail}</div>
+                <div className="fetched-email">{Email}</div>
               </div>
 
               <div className="customer-fname">
@@ -159,9 +269,9 @@ const AgentScreen = () => {
                 <div className="fetched-lname">{lname}</div>
               </div>
 
-              <a className="view-more-details" href="#">
+              <div className="view-more-details">
                 View more details
-              </a>
+              </div>
             </div>
           </div>
         </div>

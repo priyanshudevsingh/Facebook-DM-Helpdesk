@@ -81,7 +81,7 @@ router.get("/userdata", authenticate, async (req, res) => {
 router.get("/integration", authenticate, async (req, res) => {
   try {
     const response = await fetch(
-      `https://graph.facebook.com/me/accounts?access_token=${process.env.ACCESS_TOKEN}`,
+      `https://graph.facebook.com/me/accounts?access_token=${process.env.USER_ACCESS_TOKEN}`,
       {
         method: "GET",
         headers: {

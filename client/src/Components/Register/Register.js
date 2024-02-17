@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { backendUrl } from "../../backendUrl";
 import "./register.css";
@@ -61,6 +61,31 @@ const Register = () => {
     }
   };
 
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/userdata`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("jwtToken"),
+        },
+        credentials: "include",
+      });
+
+      const data = await res.json();
+      console.log(`Logged in as ${data.name}`);
+      navigate("/connectfb")
+    } catch (error) {
+      console.log(error);
+      navigate("/login");
+    }
+  };
+
   return (
     <>
       <section className="registerpage">
@@ -105,7 +130,7 @@ const Register = () => {
                 ></input>
               </div>
 
-              <div className="tickbox-container">
+              <div className="tickbox-container-register">
                 <input type="checkbox" />
                 <label>Remember Me</label>
               </div>
