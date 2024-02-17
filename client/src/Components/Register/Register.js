@@ -82,7 +82,7 @@ const Register = () => {
       navigate("/connectfb")
     } catch (error) {
       console.log(error);
-      navigate("/login");
+      navigate("/");
     }
   };
 

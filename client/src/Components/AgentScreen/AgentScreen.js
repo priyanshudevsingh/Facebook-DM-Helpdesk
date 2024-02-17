@@ -93,8 +93,29 @@ const AgentScreen = () => {
     setLname(lastName);
   };
 
+  const fetchUserData = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/userdata`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("jwtToken"),
+        },
+        credentials: "include",
+      });
+
+      const data = await res.json();
+      console.log(`Logged in as ${data.name}`);
+    } catch (error) {
+      console.log(error);
+      navigate("/login");
+    }
+  };
+
   useEffect(() => {
     fetchMessages();
+    fetchUserData();
   }, []);
 
   return (
@@ -269,9 +290,7 @@ const AgentScreen = () => {
                 <div className="fetched-lname">{lname}</div>
               </div>
 
-              <div className="view-more-details">
-                View more details
-              </div>
+              <div className="view-more-details">View more details</div>
             </div>
           </div>
         </div>

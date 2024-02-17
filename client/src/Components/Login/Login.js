@@ -45,7 +45,7 @@ const Login = () => {
       }
     } catch (err) {
       console.log(err);
-      navigate("/");
+      navigate("/login");
     }
   };
 
