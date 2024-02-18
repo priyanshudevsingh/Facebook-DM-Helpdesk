@@ -41,13 +41,11 @@ const Login = () => {
         localStorage.setItem("jwtToken", data.token);
         window.alert("Login Successful");
         console.log("Login Successful");
-        window.alert("You're are already authenticated");
         navigate("/connectfb");
       }
     } catch (err) {
       console.log(err);
       navigate("/login");
-      window.alert("Internal Server Error");
     }
   };
 
