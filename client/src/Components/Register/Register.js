@@ -79,10 +79,12 @@ const Register = () => {
 
       const data = await res.json();
       console.log(`Logged in as ${data.name}`);
-      navigate("/connectfb")
+      window.alert("You're are already authenticated");
+      navigate("/connectfb");
     } catch (error) {
       console.log(error);
       navigate("/");
+      window.alert("Internal Server Error");
     }
   };
 

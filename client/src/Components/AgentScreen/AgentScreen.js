@@ -22,32 +22,38 @@ const AgentScreen = () => {
   const [lname, setLname] = useState("");
   const [conversations, setConversations] = useState([]);
   const [pageName, setPageName] = useState("");
-  const [activeChatData, setActiveChatData] = useState("");
+  const [ShowChat, setShowChat] = useState("");
+  const [newMessage, setNewMessage] = useState("");
 
   let custName = "";
   let custEmail = "";
+  let custId = "";
 
   // fetching all the messages log and info from backend
   const fetchMessages = async () => {
     try {
-      const res = await fetch(`${backendUrl}/fetchMessages`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("jwtToken"),
-        },
-        credentials: "include",
-      });
+      const res = await fetch(
+        `https://graph.facebook.com/v19.0/${process.env.REACT_APP_PAGE_ID}/conversations?fields=participants,messages%7Bid,message,created_time,from%7D&access_token=${process.env.REACT_APP_PAGE_ACCESS_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
 
       const data = await res.json();
+      console.log("hi");
 
       // getting the info from the data that we just got
       const conversationsData = [];
-      data.forEach((chat) => {
+      data.data.forEach((chat) => {
         const participants = chat.participants.data;
         setPageName(participants[1].name);
         custEmail = participants[0].email;
         custName = participants[0].name;
+        custId = participants[0].id;
 
         const conversationMessages = [];
         chat.messages.data.forEach((message) => {
@@ -68,29 +74,18 @@ const AgentScreen = () => {
       }
     } catch (err) {
       console.log(err);
-      navigate("/login");
-    }
-  };
-
-  const fetchChat = (email) => {
-    try {
-      const chat = conversations.find(
-        (conversation) => conversation.email === email
-      );
-      setActiveChatData(chat);
-    } catch (err) {
-      console.error(err);
     }
   };
 
   const handleViewChat = (email, name) => {
     const [firstName, ...lastNameArray] = name.split(" ");
     const lastName = lastNameArray.join(" ");
-    fetchChat(email);
+
     setEmail(email);
     setFullName(name);
     setFname(firstName);
     setLname(lastName);
+    setShowChat(true);
   };
 
   const fetchUserData = async () => {
@@ -110,11 +105,50 @@ const AgentScreen = () => {
     } catch (error) {
       console.log(error);
       navigate("/login");
+      window.alert("Internal Server Error");
+    }
+  };
+
+  const sendMessage = async () => {
+    try {
+      const res = await fetch(
+        `https://graph.facebook.com/v19.0/me/messages?access_token=${process.env.REACT_APP_PAGE_ACCESS_TOKEN}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            recipient: {
+              id: "7949585871722916",
+            },
+            message: {
+              text: newMessage,
+            },
+          }),
+        }
+      );
+
+      const data = await res.json();
+      console.log("Message sent:", data);
+      setNewMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (newMessage.trim() !== "") {
+      sendMessage();
     }
   };
 
   useEffect(() => {
-    fetchMessages();
+    // fetchMessages();
+    const intervalId = setInterval(() => fetchMessages(), 3000); // Poll every 3 seconds
+    return () => clearInterval(intervalId);
+  }, []);
+  useEffect(() => {
     fetchUserData();
   }, []);
 
@@ -208,21 +242,33 @@ const AgentScreen = () => {
         </div>
         <div className="partition"></div>
         <div className="all-chats">
-          {activeChatData &&
-            activeChatData.messages &&
-            activeChatData.messages
-              .slice()
-              .reverse()
-              .map((i) => <Chats msg={i} pageName={pageName} />)}
+          {ShowChat &&
+            conversations.map((conversation) => {
+              if (conversation.email === Email && conversation.messages) {
+                return conversation.messages
+                  .slice()
+                  .reverse()
+                  .map((i) => <Chats msg={i} pageName={pageName} />);
+              }
+            })}
         </div>
 
         <div className="msg-typing-area">
           <input
             type="text"
-            name=""
             className="msg-typing-area-inside"
             placeholder={`Message ${fullName}`}
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSendMessage();
+              }
+            }}
           />
+          <button className="send-button" onClick={handleSendMessage}>
+            Send
+          </button>
         </div>
       </div>
 

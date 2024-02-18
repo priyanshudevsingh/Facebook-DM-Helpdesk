@@ -28,6 +28,7 @@ const DeleteDisconnect = () => {
     } catch (error) {
       console.log(error);
       navigate("/login");
+      window.alert("Internal Server Error");
     }
   };
 

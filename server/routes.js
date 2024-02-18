@@ -77,46 +77,4 @@ router.get("/userdata", authenticate, async (req, res) => {
   }
 });
 
-// intergration route
-router.get("/integration", authenticate, async (req, res) => {
-  try {
-    const response = await fetch(
-      `https://graph.facebook.com/me/accounts?access_token=${process.env.USER_ACCESS_TOKEN}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      }
-    );
-
-    const pages = await response.json();
-    res.send(pages.data);
-  } catch (err) {
-    console.log(err);
-  }
-});
-
-// getting customers messages route
-router.get("/fetchMessages", authenticate, async (req, res) => {
-  try {
-    const response = await fetch(
-      `https://graph.facebook.com/v19.0/${process.env.PAGE_ID}/conversations?fields=participants,messages%7Bid,message,created_time,from%7D&access_token=${process.env.MESSAGES_ACCESS_TOKEN}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      }
-    );
-
-    const pages = await response.json();
-    res.send(pages.data);
-  } catch (err) {
-    console.log(err);
-  }
-});
-
 module.exports = router;

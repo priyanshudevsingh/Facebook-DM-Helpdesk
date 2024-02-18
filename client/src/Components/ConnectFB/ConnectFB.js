@@ -30,22 +30,25 @@ const ConnectFB = () => {
     } catch (error) {
       console.log(error);
       navigate("/login");
+      window.alert("Internal Server Error");
     }
   };
 
   const ConnectPage = async () => {
     try {
-      const res = await fetch(`${backendUrl}/integration`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("jwtToken"),
-        },
-        credentials: "include",
-      });
+      const res = await fetch(
+        `https://graph.facebook.com/me/accounts?access_token=${process.env.REACT_APP_USER_ACCESS_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("jwtToken"),
+          }
+        }
+      );
 
       const data = await res.json();
-      setPages(data);
+      setPages(data.data);
 
       if (data.length === 0) {
         window.alert("No Pages Found.");
@@ -54,7 +57,7 @@ const ConnectFB = () => {
       }
     } catch (err) {
       console.log(err);
-      navigate("/login");
+      window.alert("Internal Server Error");
     }
   };
 
