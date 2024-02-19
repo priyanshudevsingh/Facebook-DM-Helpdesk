@@ -24,70 +24,15 @@ const AgentScreen = () => {
   const [pageName, setPageName] = useState("");
   const [ShowChat, setShowChat] = useState("");
   const [newMessage, setNewMessage] = useState("");
+  const [isNewMessage, setIsNewMessage] = useState(false);
+  const [activeChatMessages, setActiveChatMessages] = useState([]);
 
   let custName = "";
   let custEmail = "";
   let custId = "";
+  let lastStoredMessageTimestamp="";
 
-  // fetching all the messages log and info from backend
-  const fetchMessages = async () => {
-    try {
-      const res = await fetch(
-        `https://graph.facebook.com/v19.0/${process.env.REACT_APP_PAGE_ID}/conversations?fields=participants,messages%7Bid,message,created_time,from%7D&access_token=${process.env.REACT_APP_PAGE_ACCESS_TOKEN}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("jwtToken"),
-          },
-        }
-      );
-
-      const data = await res.json();
-      console.log("hi");
-
-      // getting the info from the data that we just got
-      const conversationsData = [];
-      data.data.forEach((chat) => {
-        const participants = chat.participants.data;
-        setPageName(participants[1].name);
-        custEmail = participants[0].email;
-        custName = participants[0].name;
-        custId = participants[0].id;
-
-        const conversationMessages = [];
-        chat.messages.data.forEach((message) => {
-          conversationMessages.push(message);
-        });
-
-        conversationsData.push({
-          name: custName,
-          email: custEmail,
-          messages: conversationMessages,
-        });
-      });
-
-      setConversations(conversationsData);
-
-      if (data.length === 0) {
-        window.alert("No Pages Found.");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const handleViewChat = (email, name) => {
-    const [firstName, ...lastNameArray] = name.split(" ");
-    const lastName = lastNameArray.join(" ");
-
-    setEmail(email);
-    setFullName(name);
-    setFname(firstName);
-    setLname(lastName);
-    setShowChat(true);
-  };
-
+  // checking that user is authenticated or not
   const fetchUserData = async () => {
     try {
       const res = await fetch(`${backendUrl}/userdata`, {
@@ -109,6 +54,55 @@ const AgentScreen = () => {
     }
   };
 
+  // fetching all the messages log and info from backend
+  const fetchMessages = async () => {
+    try {
+      const res = await fetch(
+        `https://graph.facebook.com/v19.0/${process.env.REACT_APP_PAGE_ID}/conversations?fields=participants,messages%7Bid,message,created_time,from%7D&access_token=${process.env.REACT_APP_PAGE_ACCESS_TOKEN}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      // getting the info from the data that we just got
+      const conversationsData = [];
+      data.data.forEach((chat) => {
+        const participants = chat.participants.data;
+        setPageName(participants[1].name);
+        custEmail = participants[0].email;
+        custName = participants[0].name;
+        custId = participants[0].id;
+
+        const conversationMessages = [];
+        chat.messages.data.forEach((message) => {
+          conversationMessages.push(message);
+        });
+
+        conversationsData.push({
+          name: custName,
+          email: custEmail,
+          id: custId,
+          messages: conversationMessages,
+        });
+      });
+
+      setConversations(conversationsData);
+
+      if (data.length === 0) {
+        window.alert("No Pages Found.");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // sending message to customer
   const sendMessage = async () => {
     try {
       const res = await fetch(
@@ -137,9 +131,94 @@ const AgentScreen = () => {
     }
   };
 
+  // logic for send message button
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
       sendMessage();
+    }
+  };
+
+  // opening clicked chat
+  const handleViewChat = (email, name) => {
+    const [firstName, ...lastNameArray] = name.split(" ");
+    const lastName = lastNameArray.join(" ");
+
+    setEmail(email);
+    setFullName(name);
+    setFname(firstName);
+    setLname(lastName);
+    setShowChat(true);
+    checkIfNewMessage();
+
+    conversations.map((conversation) => {
+      if (conversation.email === Email && conversation.messages) {
+        setActiveChatMessages(conversation);
+      }
+    });
+    console.log(activeChatMessages);
+  };
+
+  // checking for the new messages
+  const checkIfNewMessage = async () => {
+    try {
+      const res = await fetch(
+        `${backendUrl}/lastStoredMessageTimestamp?custId=${activeChatMessages.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        }
+      );
+      const data = await res.json();
+
+      lastStoredMessageTimestamp = Date.parse(data.timestamp);
+      const currentMessageTimestamp = Date.parse(
+        activeChatMessages.messages[0].created_time
+      );
+
+      if (currentMessageTimestamp > lastStoredMessageTimestamp) {
+        setIsNewMessage(true);
+        storeNewMessage();
+      } else {
+        setIsNewMessage(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // storing the new messages in the database
+  const storeNewMessage = async () => {
+    if (isNewMessage) {
+
+      try {
+        // Extracting new messages
+        const newMessages = activeChatMessages.messages.filter((message) => {
+          const messageTimestamp = Date.parse(message.created_time);
+          return messageTimestamp > lastStoredMessageTimestamp;
+        });
+
+        // If there are new messages to store
+        if (newMessages.length > 0) {
+          const res = await fetch(`${backendUrl}/storeMessages`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              custId: activeChatMessages.id,
+              custMsg: newMessages,
+            }),
+          });
+
+          const data = await res.json();
+
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

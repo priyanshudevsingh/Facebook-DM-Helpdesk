@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import minion from "../../Assets/SpaceMinion.png";
 
 function formatDateTime(dateTimeString) {
@@ -36,12 +36,6 @@ function formatDateTime(dateTimeString) {
 const Chats = ({ msg, pageName }) => {
   const whoseChat = pageName === msg.from.name ? "pageChat" : "customerChat";
   const chatRef = useRef(null);
-
-  useEffect(() => {
-    if (msg.isNewMessage) {
-      chatRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-    }
-  }, [msg]);
 
   return (
     <div className={whoseChat} ref={chatRef}>

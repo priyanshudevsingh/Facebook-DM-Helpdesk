@@ -1,1 +1,1 @@
-export const backendUrl = "https://facebook-dm-helpdesk-server.vercel.app";
+export const backendUrl = "http://localhost:5000";

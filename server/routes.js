@@ -5,6 +5,7 @@ const authenticate = require("./middleware/authenticate");
 
 require("./db/connect");
 const User = require("./model/userSchema");
+const Message = require("./model/messagesSchema");
 
 // home route
 router.get("/", (req, res) => {
@@ -28,8 +29,6 @@ router.post("/register", async (req, res) => {
       const user = new User({ name, email, password });
       await user.save();
       res.status(200).json({ message: "User Registered Successfully" });
-
-      console.log("yayyy");
     }
   } catch (err) {
     console.log(err);
@@ -74,6 +73,68 @@ router.get("/userdata", authenticate, async (req, res) => {
     res.send(req.userdata);
   } catch (err) {
     console.error(err);
+  }
+});
+
+// new messages storing route
+router.post("/storeMessages", async (req, res) => {
+  try {
+    const { custId, custMsg } = req.body;
+
+    const newMessages = custMsg.map((msg) => ({
+      msgId: msg.msgId,
+      message: msg.message,
+      created_time: msg.created_time,
+      from: {
+        senderName: msg.from.name,
+        senderEmail: msg.from.email,
+        senderId: msg.from.id,
+      },
+    }));
+
+    const existingCustId = await Message.findOne({ custId });
+
+    if (existingCustId) {
+      existingCustId.messages.push(...newMessages);
+      await existingCustId.save();
+    } else {
+      const firstTimeCust = new Message({
+        custId,
+        messages: newMessages,
+      });
+      await firstTimeCust.save();
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Messages stored successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.get("/lastStoredMessageTimestamp", async (req, res) => {
+  try {
+    const { custId } = req.query;
+
+    const latestMessage = await Message.findOne(
+      { custId },
+      { "messages.created_time": 1 }
+    ).sort({ "messages.created_time": -1 });
+
+    if (
+      !latestMessage ||
+      !latestMessage.messages ||
+      latestMessage.messages.length === 0
+    ) {
+      res.send({timestamp: "0"});
+    } else {
+      res.send({timestamp: latestMessage.messages[0].created_time});
+    }
+  } catch (error) {
+    console.error("Error retrieving last stored message timestamp:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
