@@ -35,14 +35,13 @@ The application will start on http://localhost:3000.
 
 ## Explanatory Video Link
 <div>
-    <a href="https://www.loom.com/share/90be718571fe43aaa3849c192d9659ad">
-      <p>Facebook DM Helpdesk App Demo Video - Watch Video</p>
+    <a href="https://www.loom.com/share/378f83fec3ed402592c386250901a851">
+      <p>Facebook DM Helpdesk App</p>
     </a>
-    <a href="https://www.loom.com/share/90be718571fe43aaa3849c192d9659ad">
-      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/90be718571fe43aaa3849c192d9659ad-with-play.gif">
+    <a href="https://www.loom.com/share/378f83fec3ed402592c386250901a851">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/378f83fec3ed402592c386250901a851-with-play.gif">
     </a>
   </div>
-
 
 ## Screenshots of the App
 <img src="client/src/Assets/Screenshots/register.png" >
